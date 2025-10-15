@@ -99,6 +99,10 @@ public class StoreService {
         return categories;
     }
 
+    public List<Order> getOrdersByCustomer(String customerName) {
+        return orderHistory.getOrDefault(customerName, new ArrayList<>());
+    }
+
 
 
 

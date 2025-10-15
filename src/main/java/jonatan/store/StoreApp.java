@@ -1,8 +1,13 @@
 package jonatan.store;
 import java.util.Map;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class StoreApp {
+    private static final Logger logger = LoggerFactory.getLogger(StoreApp.class);
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -18,33 +23,50 @@ public class StoreApp {
             System.out.println("2. Visa produkter per kategori");
             System.out.println("3. Visa topp 3 mest köpta prudkter");
             System.out.println("4. Köp produkter");
-            System.out.println("5. Avsluta");
+            System.out.println("5. Visa orderhistorik");
+            System.out.println("6. Avsluta");
             System.out.println("Välj ett alternativ (1-4)");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            try{
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (choice){
-                case 1:
-                    showAllProducts(store);
-                    break;
-                case 2:
-                    filterBycategory(scanner, store);
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    makePurchase(scanner, store);
-                    break;
+                switch (choice){
+                    case 1:
+                        showAllProducts(store);
+                        break;
+                    case 2:
+                        filterBycategory(scanner, store);
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        makePurchase(scanner, store);
+                        break;
+                    case 5:
+                        showCustomerOrders(scanner, store);
+                        break;
+                    case 6:
+                        running = false;
+                        System.out.println("Progammet avslutas...");
+                        logger.info("Progammet avslutas...");
+                        break;
+                    default:
+                        System.out.println("Ogiltligt val, try again!");
+                        logger.warn("Ogiltligt val, try again!");
+                        break;
+                }
 
-                case 5:
-                    running = false;
-                    System.out.println("Progammet avslutas...");
-                    break;
-                default:
-                    System.out.println("Ogiltligt val, try again!");
-                    break;
+            } catch (InputMismatchException e)
+            {
+                //loggar vad för fel
+                logger.warn("Något typ av felaktiv inmatning, användaren skrev något som inte var en siffra.");
+
+                System.out.println("Ogiltig inmatning! Skriv bara siffror mellan 1-6!");
+                scanner.nextLine();
+
             }
+
 
 
 
@@ -53,7 +75,8 @@ public class StoreApp {
 
     }
 
-    private static void showAllProducts(StoreService store) {
+    private static void showAllProducts(StoreService store)
+    {
         System.out.println("\n---> Alla produkter <---");
         System.out.printf("%-30s | %-15s | %-6s%n", "Produkt", "Kategori", "Pris");
         System.out.println("-------------------------------------------------------------");
@@ -173,6 +196,34 @@ public class StoreApp {
             for (Product p : filteredProducts){
                 System.out.println(p);
             }
+        }
+
+    }
+
+    private static void showCustomerOrders (Scanner scanner, StoreService store){
+        System.out.println("Ange kundens namn: ");
+        String name = scanner.nextLine();
+
+        List<Order> customerOrders = store.getOrdersByCustomer(name);
+
+        if(customerOrders.isEmpty())
+        {
+            System.out.println("Inga ordar hittades för kunden: " + name);
+            return;
+        }
+
+        System.out.println("---> Orderhistorik för: " +name + "<---");
+        for (Order o : customerOrders){
+            System.out.println("Order-id:" + o.getOrderID());
+            System.out.println("Produkter:");
+            for (Product p : o.getProducts()){
+                System.out.println(" - " + p.getName() + " (" + p.getPrice() + "$");
+
+            } double total = o.getProducts().stream()
+                    .mapToDouble(Product::getPrice)
+                    .sum();
+            System.out.printf("Totalt pris: %.2f $ %n", total);
+            System.out.println("-----------");
         }
 
     }
