@@ -5,9 +5,13 @@ import java.util.stream.Collectors;
 
 public class StoreService {
 
+    //Använde mig att arraylist här eftersom det är enklet att lägga till, sortera och filtrera, samt behövs ingen unik nyckel bara en samling av produkterna och ordrarna.
+
     private List<Product> products = new ArrayList<>();
     private List<Order> orders = new ArrayList<>();
     private Map<String, List<Order>> orderHistory = new HashMap<>();
+
+    //använder hashmap då jag får snabb åtkomst till kundernas orderhistorik till exempel via en unik nyckel (namnet)
 
     //Lägg till produkter
     public void addProduct (Product product) {
@@ -55,7 +59,7 @@ public class StoreService {
     }
 
 
-
+// Standardprodukter till butiken, använde chatgpt för har verkligen inte den orken att skriva ner allt dehär själv :D
 
     public void loadDefaultProducts() {
         addProduct(new Product("Energy_1", "Monster - Mango Loco", "Energy drinks", 1.99));
@@ -75,6 +79,7 @@ public class StoreService {
         addProduct(new Product("Soda_2", "Fanta - Exotic", "Soda", 1.09));
     }
 
+//Här filtrerar vi med streams efter vald kategori samt sorterar efter pris
     public List<Product> filterByCategory(String category) {
         return products.stream()
                 .filter(p -> p.getCategory().equalsIgnoreCase(category))
@@ -82,15 +87,18 @@ public class StoreService {
                 .toList();
 
     }
-
-    public List<Product> getProductSortedByPrice() {
+//Här retunerar vi produkterna sortade efter priset (låg till hög)
+    public List<Product> getProductSortedByPrice()
+    {
         return  products.stream()
                 .sorted(Comparator.comparingDouble(Product::getPrice))
                 .toList();
     }
+//Metod som används flera gånger med alla kategorier vi har att välja på
 
-    public Map<Integer, String> getCategories() {
-        Map<Integer, String> categories = new LinkedHashMap<>();
+    public Map<Integer, String> getCategories()
+    {
+        Map<Integer, String> categories = new LinkedHashMap<>(); //Använder Linkedhashmap då jag vill att kategorierna ska visas i samma ordning varje gång i menyn.
         categories.put(1, "Energy drinks");
         categories.put(2, "Water");
         categories.put(3, "Juice");
@@ -99,9 +107,26 @@ public class StoreService {
         return categories;
     }
 
-    public List<Order> getOrdersByCustomer(String customerName) {
+    public List<Order> getOrdersByCustomer(String customerName)
+    {
         return orderHistory.getOrDefault(customerName, new ArrayList<>());
     }
+
+
+
+    public List<Map.Entry<String, Long>> getTop3Products()
+    {
+        return orders.stream()
+                .flatMap(order -> order.getProducts().stream())
+                .collect(Collectors.groupingBy(Product::getName, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(3)
+                .toList();
+    }
+
+
+
 
 
 
