@@ -5,21 +5,25 @@ public class Customer {
     private final int customerId;
     private String name;
 
-    public Customer(String name) {
+    public Customer(String name)
+    {
         this.customerId = idCounter++;
         this.name = name;
     }
 
-    public int getCustomerID() {
+    public int getCustomerID()
+    {
         return customerId;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return customerId + " - " +name;
     }
 }

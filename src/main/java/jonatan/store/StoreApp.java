@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory;
 public class StoreApp {
     private static final Logger logger = LoggerFactory.getLogger(StoreApp.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
 
         Scanner scanner = new Scanner(System.in);
         StoreService store = new StoreService();
@@ -17,7 +18,8 @@ public class StoreApp {
 
         boolean running = true;
 
-        while(running) {
+        while(running)
+        {
             //huvudmenyn för användaren
             System.out.println("---> Välkommen <---");
             System.out.println("1. Visa alla produkter");
@@ -126,7 +128,8 @@ public class StoreApp {
         //Filtrerar produkterna i vald kategori med hjälp av streams
         List<Product> filteredProducts = store.filterByCategory(category);
 
-        if (filteredProducts.isEmpty()) {
+        if (filteredProducts.isEmpty())
+        {
             System.out.println("Inga produkter hittades i kategorin: " + category);
         } else {
             System.out.println("Produkter i kategorin " + category + ":");
@@ -138,7 +141,8 @@ public class StoreApp {
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            if (choice == 0) {
+            if (choice == 0)
+            {
                 System.out.println("Köpet avbrutet.");
                 return;
             }
@@ -205,7 +209,8 @@ public class StoreApp {
 
         List<Order> customerOrders = store.getOrdersByCustomer(name);
 
-        if (customerOrders.isEmpty()) {
+        if (customerOrders.isEmpty())
+        {
             System.out.println("Inga ordrar hittades för kunden: " + name);
             return;
         }
@@ -213,10 +218,12 @@ public class StoreApp {
         System.out.println("---> Orderhistorik för: " + name + " <---");
         double totalSpent = 0; // här håller vi reda på kundens totala spenderade belopp
 
-        for (Order o : customerOrders) {
+        for (Order o : customerOrders)
+        {
             System.out.println("Order-id: " + o.getOrderID());
             System.out.println("Produkter:");
-            for (Product p : o.getProducts()) {
+            for (Product p : o.getProducts())
+            {
                 System.out.println(" - " + p.getName() + " (" + p.getPrice() + " $)");
             }
 
@@ -239,12 +246,14 @@ public class StoreApp {
 
     //Visar de tre mest köpta produkterna totalt
 
-    private static void showTop3MostBoughtProducts(StoreService store){
+    private static void showTop3MostBoughtProducts(StoreService store)
+    {
         System.out.println("---> Topp 3 mest köpta produkter <---");
 
         try
         {
-            if(store.getOrders().isEmpty()) {
+            if(store.getOrders().isEmpty())
+            {
                 System.out.println("Inga köp har gjorts än");
                 logger.info("Försök att visa topp 3 ordrar utan några ordar");
                 return;
@@ -260,12 +269,14 @@ public class StoreApp {
             }
 
             System.out.println("De tre mest köpa produkterna");
-            for(Map.Entry<String, Long> entry : top3) {
+            for(Map.Entry<String, Long> entry : top3)
+            {
                 System.out.printf("%s - %d köp%n", entry.getKey(), entry.getValue());
                 logger.info("Topp 3 visade utan problem :)");
             }
 
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             System.out.println("Ett oväntat fel uppstod när topp 3 skulle visas");
             logger.error("Fel när Topp 3 mest köpa produkter skulle visas");
         }

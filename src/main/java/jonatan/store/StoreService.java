@@ -14,25 +14,30 @@ public class StoreService {
     //använder hashmap då jag får snabb åtkomst till kundernas orderhistorik till exempel via en unik nyckel (namnet)
 
     //Lägg till produkter
-    public void addProduct (Product product) {
+    public void addProduct (Product product)
+    {
         products.add(product);
     }
 
-    public void addOrder(Order order) {
+    public void addOrder(Order order)
+    {
         orders.add(order);
         orderHistory.computeIfAbsent(order.getCustomerName(), k -> new ArrayList<>()).add(order);
     }
 
 
-    public List<Product> getProducts() {
+    public List<Product> getProducts()
+    {
         return products;
     }
 
-    public List<Order> getOrders() {
+    public List<Order> getOrders()
+    {
         return orders;
     }
 
-    public Map<String, List<Order>> getOrderHistory() {
+    public Map<String, List<Order>> getOrderHistory()
+    {
         return orderHistory;
     }
 
@@ -61,7 +66,8 @@ public class StoreService {
 
 // Standardprodukter till butiken, använde chatgpt för har verkligen inte den orken att skriva ner allt dehär själv :D
 
-    public void loadDefaultProducts() {
+    public void loadDefaultProducts()
+    {
         addProduct(new Product("Energy_1", "Monster - Mango Loco", "Energy drinks", 1.99));
         addProduct(new Product("Energy_2", "Red Bull - Apricot Edition", "Energy drinks", 1.79));
         addProduct(new Product("Energy_3", "Monster - Ultra White", "Energy drinks", 1.89));
@@ -80,7 +86,8 @@ public class StoreService {
     }
 
 //Här filtrerar vi med streams efter vald kategori samt sorterar efter pris
-    public List<Product> filterByCategory(String category) {
+    public List<Product> filterByCategory(String category)
+    {
         return products.stream()
                 .filter(p -> p.getCategory().equalsIgnoreCase(category))
                 .sorted(Comparator.comparingDouble(Product::getPrice))
